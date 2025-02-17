@@ -7,7 +7,7 @@ Tg bot for notifications about kitchen cleaning duties :3
 Для роботоспособности в папке проекта нужно добавить папку saves и в ней 2 txt файла:
   1) с токеном бота   
   2) пустой txt файл, чтобы сохранять имена и ID, чтобы потом им отправлять уведомления
-Примеры названий 1) Token.txt 2) UsersNotifications
+Примеры названий 1) Token.txt 2) UsersNotifications.txt
 
 И в файле main.go поменять константные пути в начале на пути к файлам из пред. пункта (к Token.txt и UsersNotifications)
 
