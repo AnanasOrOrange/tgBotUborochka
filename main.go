@@ -15,9 +15,9 @@ import (
 // пути откуда считывать токен бота и куда сохранять имена с ID для отправки уведомлений
 const (
 	//пути к файлам
-	filePathNotifications = "D:\\GoLangProjects\\tgBotUborochka\\saves\\UsersNotifications.txt"
-	filePathToken         = "D:\\GoLangProjects\\tgBotUborochka\\saves\\Token.txt"
-	filePathNames         = "D:\\GoLangProjects\\tgBotUborochka\\saves\\Names.txt"
+	filePathNotifications = "saves\\UsersNotifications.txt"
+	filePathToken         = "saves\\Token.txt"
+	filePathNames         = "saves\\Names.txt"
 
 	//мин,час,день месяца,месяц,день недели(вс=0,пн=1,вт=2,...,сб=6)
 	// * = любое
