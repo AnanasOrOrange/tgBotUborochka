@@ -1,14 +1,8 @@
 package main
 
 import (
-	"bufio"
-	"fmt"
 	"log"
-	"os"
-	"strconv"
-	"strings"
 	"time"
-	"unicode"
 
 	"tgBotUborochka/names"
 	"tgBotUborochka/notification"
@@ -40,6 +34,13 @@ func check(err error, s string) {
 		log.Println(s)
 		log.Fatal(err)
 	}
+}
+
+func WhoCleaningThisWeek(startTime time.Time, tgNames []string) string {
+	dur := time.Since(startTime)
+	numCleaner := int(dur.Hours()/24/7) % len(tgNames)
+
+	return tgNames[numCleaner]
 }
 
 func main() {
@@ -129,7 +130,7 @@ func main() {
 	// если написали имя из списка, сохраняем его ID, чтобы включить напоминание
 	for _, name := range tgNames {
 		b.Handle(name, func(c tele.Context) error {
-			return addNotificationName(c, filePathNotifications, menuMain)
+			return notification.AddNotificationName(c, filePathNotifications, menuMain)
 		})
 	}
 
@@ -141,17 +142,17 @@ func main() {
 
 	// отправка уведомлений
 	_, err = c.AddFunc(timeSendNotificationStartDuty, func() {
-		err = sendNotification(
+		err = notification.SendNotification(
 			"📣 Привет, %s.\nНаступила твоя неделя уборки на кухне.\n", // messageTemplate
-			firstWeek, tgNames, filePathNotifications, b,
+			firstWeek, tgNames, filePathNotifications, b, WhoCleaningThisWeek,
 		)
 		check(err, "Не запустились уведомление о начале недели")
 	})
 
 	_, err = c.AddFunc(timeSendNotificationСleaning, func() {
-		err = sendNotification(
+		err = notification.SendNotification(
 			"🕒 Привет, %s.\nНе забудь убраться сегодня на кухне.\nХорошего тебе вечера 😉.\n", // messageTemplate
-			firstWeek, tgNames, filePathNotifications, b,
+			firstWeek, tgNames, filePathNotifications, b, WhoCleaningThisWeek,
 		)
 		check(err, "Не запустились уведомление о дежурстве")
 	})
@@ -159,65 +160,4 @@ func main() {
 	// запускаем ботика
 	b.Start()
 	defer b.Stop()
-}
-
-func WhoCleaningThisWeek(startTime time.Time, tgNames []string) string {
-	dur := time.Since(startTime)
-	numCleaner := int(dur.Hours()/24/7) % len(tgNames)
-
-	return tgNames[numCleaner]
-}
-
-// Общая функция для обработки всех имен
-func addNotificationName(c tele.Context, filePathNotifications string, menuMain *tele.ReplyMarkup) error {
-	ID := c.Recipient().Recipient()
-	_, err := notification.ExcludeLines(filePathNotifications, ID)
-	if err != nil {
-		return err
-	}
-
-	newLine := fmt.Sprintf("%s %s\n", c.Text(), ID)
-	err = notification.AppendLine(filePathNotifications, newLine)
-	if err != nil {
-		return err
-	}
-
-	return c.Send("✅ Сохранено ✅", menuMain)
-}
-
-// функция отправки уведомления
-func sendNotification(messageTemplate string, firstWeek time.Time, tgNames []string, filePathNotifications string, b *tele.Bot) error {
-	whoCleaning := WhoCleaningThisWeek(firstWeek, tgNames)
-
-	file, err := os.Open(filePathNotifications)
-	if err != nil {
-		return err
-	}
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		line := scanner.Text()
-		if strings.Contains(line, whoCleaning) {
-			stringID := strings.TrimFunc(line, func(r rune) bool {
-				return !unicode.IsNumber(r)
-			})
-			ID, err := strconv.Atoi(stringID)
-			if err != nil {
-				return err
-			}
-
-			chat, err := b.ChatByID(int64(ID))
-			if err != nil {
-				return err
-			}
-
-			message := fmt.Sprintf(messageTemplate, whoCleaning)
-			_, err = b.Send(chat, message)
-			if err != nil {
-				return err
-			}
-		}
-	}
-	return err
 }
