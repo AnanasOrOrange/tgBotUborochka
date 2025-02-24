@@ -15,8 +15,8 @@ Tg bot for notifications about kitchen cleaning duties :3
 
 Можно еще поменять времена отправки уведомлений и сообщения, которые отправляются
 
-Для этого в main.go нужно : 
-    Поменять значения переменных timeSendNotificationStartDuty и timeSendNotificationСleaning для времени 
-    и messageStartWeek , messageCleanKitchen для сообщений, которые появляются в уведомлениях
+Для этого в main.go нужно :
+Поменять значения переменных timeSendNotificationStartDuty и timeSendNotificationСleaning для времени 
+Поменять значения переменных messageStartWeek , messageCleanKitchen для сообщений, которые появляются в уведомлениях
 Еще после этого нужно будет пересобрать проект командой ( go build . ) , но для этого нужен будет go компилятор
 
