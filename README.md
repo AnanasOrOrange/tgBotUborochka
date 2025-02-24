@@ -1,6 +1,8 @@
 # tgBotUborochka
 Tg bot for notifications about kitchen cleaning duties :3
 
+Можно просто скачать tgBotUborochka.exe и в одной папке с ним создать папку saves ( с Token.txt , Names.txt , UsersNotifications.txt )
+
 Ну а если по русски, то это тг бот который позваляет распределить дежурство по неделям. Он может писать чья сейчас очередь и отправлять уведомления в пн о начале дежурства, во вт чт вс вечером напоминание убраться.
 Все уведомления оптравляются в 18:00 по местному времени.
 
@@ -11,6 +13,9 @@ Tg bot for notifications about kitchen cleaning duties :3
 
 Примеры названий 1) Token.txt 2) Names.txt 3) UsersNotifications.txt
 
-И поменять в файле main.go в начале (в const) полные пути (к Token.txt , Names.txt , UsersNotifications.txt)
+Можно еще поменять времена отправки уведомлений и сообщения, которые отправляются
 
-Можно еще поменять времена отправки уведомлений, это переменные timeSendNotificationStartDuty и timeSendNotificationСleaning 
+Для этого в main.go нужно : 
+    Поменять значения переменных timeSendNotificationStartDuty и timeSendNotificationСleaning для времени 
+    и messageStartWeek , messageCleanKitchen для сообщений, которые появляются в уведомлениях
+Еще после этого нужно будет пересобрать проект командой ( go build . ) , но для этого нужен будет go компилятор

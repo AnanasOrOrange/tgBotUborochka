@@ -27,6 +27,9 @@ const (
 	timeSendNotificationStartDuty = "0 18 * * 1"
 	//время отравки уведомления о дежурстве вечером
 	timeSendNotificationСleaning = "0 18 * * 2,4,0"
+
+	messageStartWeek    = "📣 Привет, %s.\nНаступила твоя неделя уборки на кухне.\n"
+	messageCleanKitchen = "🕒 Привет, %s.\nНе забудь убраться сегодня на кухне.\nХорошего тебе вечера 😉.\n"
 )
 
 func check(err error, s string) {
@@ -143,7 +146,7 @@ func main() {
 	// отправка уведомлений
 	_, err = c.AddFunc(timeSendNotificationStartDuty, func() {
 		err = notification.SendNotification(
-			"📣 Привет, %s.\nНаступила твоя неделя уборки на кухне.\n", // messageTemplate
+			messageStartWeek, // messageTemplate
 			firstWeek, tgNames, filePathNotifications, b, WhoCleaningThisWeek,
 		)
 		check(err, "Не запустились уведомление о начале недели")
@@ -151,7 +154,7 @@ func main() {
 
 	_, err = c.AddFunc(timeSendNotificationСleaning, func() {
 		err = notification.SendNotification(
-			"🕒 Привет, %s.\nНе забудь убраться сегодня на кухне.\nХорошего тебе вечера 😉.\n", // messageTemplate
+			messageCleanKitchen, // messageTemplate
 			firstWeek, tgNames, filePathNotifications, b, WhoCleaningThisWeek,
 		)
 		check(err, "Не запустились уведомление о дежурстве")
